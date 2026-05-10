@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Curated atlas of multimodal integration methods for biology, searchable by data regime, method properties, supervision, and application task."
+    />
+    <title>Multimodal Integration Atlas</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-inner">
+        <div>
+          <p class="eyebrow">Research-created method library</p>
+          <h1>Multimodal Integration Atlas</h1>
+          <p class="lede">
+            Search a curated library of multimodal biology methods by data regime,
+            modelling assumptions, supervision, and intended task.
+          </p>
+        </div>
+        <nav class="header-actions" aria-label="Repository links">
+          <a class="button secondary" href="docs/schema.md">Schema</a>
+          <a
+            class="button primary"
+            href="https://github.com/storaged/multimodal-integration-atlas/issues/new?template=method_suggestion.yml"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Suggest method
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="overview" aria-label="Overview">
+        <div class="metric-panel">
+          <div>
+            <span class="metric" id="methodCount">0</span>
+            <span class="metric-label">methods</span>
+          </div>
+          <div>
+            <span class="metric" id="visibleCount">0</span>
+            <span class="metric-label">visible after filters</span>
+          </div>
+          <div>
+            <span class="metric" id="familyCount">0</span>
+            <span class="metric-label">method families</span>
+          </div>
+        </div>
+        <div class="figure-strip">
+          <img src="assets/multimodal-axes.png" alt="Conceptual axes for multimodal data regimes and model properties" />
+          <img src="assets/method-families.png" alt="Overview of multimodal integration method families" />
+        </div>
+      </section>
+
+      <section class="workspace" aria-label="Method search">
+        <aside class="filters" aria-label="Filters">
+          <div class="filters-head">
+            <h2>Filters</h2>
+            <button id="clearFilters" class="link-button" type="button">Clear</button>
+          </div>
+
+          <label class="field">
+            <span>Search</span>
+            <input id="searchInput" type="search" placeholder="Method or family" />
+          </label>
+
+          <label class="field">
+            <span>Data pairedness</span>
+            <select id="data_pairedness"></select>
+          </label>
+
+          <label class="field">
+            <span>Missingness</span>
+            <select id="data_missingness"></select>
+          </label>
+
+          <label class="field">
+            <span>Integration level</span>
+            <select id="method_integration_level"></select>
+          </label>
+
+          <label class="field">
+            <span>Uncertainty</span>
+            <select id="method_uncertainty"></select>
+          </label>
+
+          <label class="field">
+            <span>Prior knowledge</span>
+            <select id="method_prior_knowledge"></select>
+          </label>
+
+          <label class="field">
+            <span>Supervision</span>
+            <select id="supervision"></select>
+          </label>
+
+          <label class="field">
+            <span>Application task</span>
+            <select id="application_task"></select>
+          </label>
+
+          <label class="field">
+            <span>Method family</span>
+            <select id="method_family"></select>
+          </label>
+
+          <div class="filter-note">
+            Empty selections are treated as unspecified. Results are ranked by
+            matched axes before alphabetical order.
+          </div>
+        </aside>
+
+        <section class="results" aria-label="Method results">
+          <div class="results-toolbar">
+            <h2>Methods</h2>
+            <div class="toolbar-controls">
+              <label>
+                <input id="hideCuration" type="checkbox" />
+                Hide rows needing curation
+              </label>
+              <button id="downloadCsv" class="button secondary" type="button">Download CSV</button>
+            </div>
+          </div>
+          <div id="activeFilters" class="active-filters" aria-live="polite"></div>
+          <div id="resultsList" class="results-list"></div>
+        </section>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>
+        Public data library for multimodal integration methods. The article link
+        will be added after manuscript release.
+      </p>
+      <a href="https://github.com/storaged/multimodal-integration-atlas" target="_blank" rel="noreferrer">
+        GitHub repository
+      </a>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,38 @@
+# Contributing
+
+Contributions are welcome when they improve the scientific accuracy, coverage, or usability of the method atlas.
+
+## Suggesting a Method
+
+Use the GitHub issue template named `Method suggestion`. Please include:
+
+- method name
+- citation or DOI
+- method family
+- data pairedness
+- missingness regime
+- integration level
+- uncertainty handling
+- prior knowledge category
+- primary application task
+- short rationale for the classification
+
+## Updating the Library
+
+Curated method entries live in:
+
+```text
+data/integration_methods_library.csv
+```
+
+For pull requests:
+
+1. Keep one method per row.
+2. Prefer existing controlled values from `docs/schema.md`.
+3. Set `needs_curation=yes` if a classification is uncertain.
+4. Add a short note in `curation_notes` when judgement calls are involved.
+5. Keep manuscript drafts, private notes, and extractor scripts out of this repository.
+
+## Review Criteria
+
+Changes should be evidence-backed, consistent with the schema, and useful for researchers selecting multimodal integration methods.

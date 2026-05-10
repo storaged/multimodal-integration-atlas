@@ -1,0 +1,102 @@
+name: Method suggestion
+description: Suggest a new multimodal integration method or update an existing entry.
+title: "Method suggestion: "
+labels: ["method suggestion", "curation"]
+body:
+  - type: input
+    id: method
+    attributes:
+      label: Method name
+      description: Official or commonly used method name.
+    validations:
+      required: true
+  - type: input
+    id: citation
+    attributes:
+      label: Citation or DOI
+      description: DOI, preprint link, journal page, or repository.
+    validations:
+      required: true
+  - type: dropdown
+    id: method_family
+    attributes:
+      label: Method family
+      options:
+        - Deterministic
+        - Probabilistic
+        - VAE / Representation learning
+        - Foundation models
+        - MIL
+        - Contrastive learning
+        - Other / unsure
+    validations:
+      required: true
+  - type: dropdown
+    id: data_pairedness
+    attributes:
+      label: Data pairedness
+      options:
+        - paired
+        - partial
+        - unpaired
+        - unsure
+    validations:
+      required: true
+  - type: dropdown
+    id: data_missingness
+    attributes:
+      label: Missingness
+      options:
+        - none
+        - partial
+        - modality
+        - generative
+        - unsure
+    validations:
+      required: true
+  - type: dropdown
+    id: integration_level
+    attributes:
+      label: Integration level
+      options:
+        - single
+        - multi
+        - unsure
+    validations:
+      required: true
+  - type: dropdown
+    id: uncertainty
+    attributes:
+      label: Explicit uncertainty handling
+      options:
+        - "yes"
+        - "no"
+        - unsure
+    validations:
+      required: true
+  - type: dropdown
+    id: prior
+    attributes:
+      label: Prior knowledge
+      options:
+        - none
+        - structure
+        - supervision
+        - soft
+        - unsure
+    validations:
+      required: true
+  - type: input
+    id: task
+    attributes:
+      label: Primary application task
+      description: For example discovery, alignment, imputation, prediction, deconvolution, generation.
+    validations:
+      required: true
+  - type: textarea
+    id: rationale
+    attributes:
+      label: Evidence and rationale
+      description: Briefly explain why the method should be classified this way.
+    validations:
+      required: true
