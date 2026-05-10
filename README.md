@@ -37,7 +37,10 @@ No build step is required.
 
 ## Contributing Method Entries
 
-Researchers can suggest a new method or a correction by opening a GitHub issue using the method suggestion template. Curators can then update `data/integration_methods_library.csv` through a pull request.
+Researchers can suggest a new method or a correction from the site using the
+guided `Suggest method` form. The form creates a prefilled GitHub issue and a
+candidate CSV row for curator review. Curators can then update
+`data/integration_methods_library.csv` through a pull request.
 
 Rows marked `needs_curation=yes` are known incomplete entries and should be reviewed before downstream use.
 

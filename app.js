@@ -3,12 +3,12 @@ const DATA_URL = "data/integration_methods_library.csv";
 const filterConfig = [
   { id: "data_pairedness", label: "Data pairedness" },
   { id: "data_missingness", label: "Missingness" },
+  { id: "method_family", label: "Method family" },
   { id: "method_integration_level", label: "Integration level" },
   { id: "method_uncertainty", label: "Uncertainty" },
   { id: "method_prior_knowledge", label: "Prior knowledge" },
   { id: "supervision", label: "Supervision" },
   { id: "application_task", label: "Application task" },
-  { id: "method_family", label: "Method family" },
 ];
 
 const axisLabels = {
@@ -23,6 +23,15 @@ const axisLabels = {
 };
 
 let methods = [];
+
+const suggestionSelects = [
+  { id: "suggestFamily", source: "method_family", fallback: ["Other / unsure"] },
+  { id: "suggestPairedness", source: "data_pairedness", fallback: ["unsure"] },
+  { id: "suggestMissingness", source: "data_missingness", fallback: ["unsure"] },
+  { id: "suggestLevel", source: "method_integration_level", fallback: ["unsure"] },
+  { id: "suggestUncertainty", source: "method_uncertainty", fallback: ["unsure"] },
+  { id: "suggestPrior", source: "method_prior_knowledge", fallback: ["unsure"] },
+];
 
 function parseCsv(text) {
   const rows = [];
@@ -82,6 +91,19 @@ function labelize(value) {
     .replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
 
+function slugify(value) {
+  return (value || "method")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+function csvEscape(value) {
+  const safe = value || "";
+  if (/[",\n]/.test(safe)) return `"${safe.replaceAll('"', '""')}"`;
+  return safe;
+}
+
 function selectOptions(id) {
   if (id === "application_task") {
     const tasks = new Set();
@@ -110,6 +132,26 @@ function populateSelects() {
     select.appendChild(anyOption);
 
     selectOptions(id).forEach((value) => {
+      const option = document.createElement("option");
+      option.value = value;
+      option.textContent = labelize(value);
+      select.appendChild(option);
+    });
+  });
+}
+
+function populateSuggestionSelects() {
+  suggestionSelects.forEach(({ id, source, fallback }) => {
+    const select = document.getElementById(id);
+    select.innerHTML = "";
+
+    const unsure = document.createElement("option");
+    unsure.value = "";
+    unsure.textContent = "Unspecified";
+    select.appendChild(unsure);
+
+    const values = [...new Set([...selectOptions(source), ...fallback])].filter(Boolean);
+    values.forEach((value) => {
       const option = document.createElement("option");
       option.value = value;
       option.textContent = labelize(value);
@@ -204,6 +246,7 @@ function axisBlock(label, value) {
 function renderMethod(method, score) {
   const statusClass = method.needs_curation === "yes" ? "needs-curation" : "curated";
   const statusText = method.needs_curation === "yes" ? "Needs curation" : "Curated";
+  const scoreText = score ? `${score} matched` : "No filters";
   return `
     <article class="method-card">
       <div class="method-topline">
@@ -211,7 +254,7 @@ function renderMethod(method, score) {
           <h3>${method.method}</h3>
           <div class="method-meta">${method.method_family} · ${labelize(method.method_scope)}</div>
         </div>
-        <div class="score">${score} axis${score === 1 ? "" : "es"}</div>
+        <div class="score">${scoreText}</div>
       </div>
       <div class="axis-grid">
         ${axisBlock(axisLabels.data_pairedness, method.data_pairedness)}
@@ -226,6 +269,75 @@ function renderMethod(method, score) {
       <span class="status ${statusClass}">${statusText}</span>
     </article>
   `;
+}
+
+function suggestionValue(id) {
+  return document.getElementById(id).value.trim();
+}
+
+function candidateCsvRow() {
+  const method = suggestionValue("suggestMethod");
+  const family = suggestionValue("suggestFamily");
+  const task = suggestionValue("suggestTask");
+  const row = [
+    slugify(method),
+    method,
+    family,
+    "",
+    "Community suggestion",
+    "",
+    "",
+    suggestionValue("suggestPairedness"),
+    suggestionValue("suggestMissingness"),
+    suggestionValue("suggestLevel"),
+    suggestionValue("suggestUncertainty"),
+    suggestionValue("suggestPrior"),
+    task,
+    "",
+    task.replace(/\s*\+\s*/g, ";"),
+    "yes",
+    `suggested citation: ${suggestionValue("suggestCitation")}`,
+  ];
+  return row.map(csvEscape).join(",");
+}
+
+function issueUrl() {
+  const method = suggestionValue("suggestMethod") || "new method";
+  const body = [
+    "## Method suggestion",
+    "",
+    `- Method: ${method}`,
+    `- Citation or DOI: ${suggestionValue("suggestCitation") || "not provided"}`,
+    `- Method family: ${suggestionValue("suggestFamily") || "unspecified"}`,
+    `- Data pairedness: ${suggestionValue("suggestPairedness") || "unspecified"}`,
+    `- Missingness: ${suggestionValue("suggestMissingness") || "unspecified"}`,
+    `- Integration level: ${suggestionValue("suggestLevel") || "unspecified"}`,
+    `- Uncertainty: ${suggestionValue("suggestUncertainty") || "unspecified"}`,
+    `- Prior knowledge: ${suggestionValue("suggestPrior") || "unspecified"}`,
+    `- Primary application task: ${suggestionValue("suggestTask") || "unspecified"}`,
+    "",
+    "## Evidence and rationale",
+    "",
+    suggestionValue("suggestRationale") || "Not provided.",
+    "",
+    "## Candidate CSV row",
+    "",
+    "```csv",
+    candidateCsvRow(),
+    "```",
+  ].join("\n");
+
+  const params = new URLSearchParams({
+    title: `Method suggestion: ${method}`,
+    body,
+    labels: "method suggestion,curation",
+  });
+  return `https://github.com/storaged/multimodal-integration-atlas/issues/new?${params.toString()}`;
+}
+
+function updateSuggestionOutput() {
+  document.getElementById("suggestCsvRow").value = candidateCsvRow();
+  document.getElementById("openIssueLink").href = issueUrl();
 }
 
 function renderResults() {
@@ -266,6 +378,26 @@ function attachEvents() {
   document.getElementById("downloadCsv").addEventListener("click", () => {
     window.location.href = DATA_URL;
   });
+
+  const dialog = document.getElementById("suggestDialog");
+  document.getElementById("openSuggestDialog").addEventListener("click", () => {
+    updateSuggestionOutput();
+    dialog.showModal();
+  });
+  document.getElementById("closeSuggestDialog").addEventListener("click", () => {
+    dialog.close();
+  });
+  document.querySelectorAll("#suggestDialog input, #suggestDialog select, #suggestDialog textarea").forEach((field) => {
+    field.addEventListener("input", updateSuggestionOutput);
+    field.addEventListener("change", updateSuggestionOutput);
+  });
+  document.getElementById("copyCsvRow").addEventListener("click", async () => {
+    await navigator.clipboard.writeText(document.getElementById("suggestCsvRow").value);
+    document.getElementById("copyCsvRow").textContent = "Copied";
+    setTimeout(() => {
+      document.getElementById("copyCsvRow").textContent = "Copy CSV row";
+    }, 1600);
+  });
 }
 
 async function init() {
@@ -276,9 +408,14 @@ async function init() {
   document.getElementById("familyCount").textContent = new Set(
     methods.map((method) => method.method_family),
   ).size;
+  document.getElementById("curationCount").textContent = methods.filter(
+    (method) => method.needs_curation === "yes",
+  ).length;
   populateSelects();
+  populateSuggestionSelects();
   attachEvents();
   renderResults();
+  updateSuggestionOutput();
 }
 
 init().catch((error) => {

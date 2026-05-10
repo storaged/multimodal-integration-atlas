@@ -23,20 +23,33 @@
         </div>
         <nav class="header-actions" aria-label="Repository links">
           <a class="button secondary" href="docs/schema.md">Schema</a>
-          <a
-            class="button primary"
-            href="https://github.com/storaged/multimodal-integration-atlas/issues/new?template=method_suggestion.yml"
-            target="_blank"
-            rel="noreferrer"
-          >
+          <button class="button primary" id="openSuggestDialog" type="button">
             Suggest method
-          </a>
+          </button>
         </nav>
       </div>
     </header>
 
     <main>
       <section class="overview" aria-label="Overview">
+        <div class="intro-panel">
+          <div>
+            <p class="section-kicker">Decision support</p>
+            <h2>Find methods by the axes used in the review</h2>
+            <p>
+              Start with what is known about the data, then refine by model
+              assumptions and task. Leaving a field unspecified keeps the search
+              broad.
+            </p>
+          </div>
+          <ol class="workflow-list">
+            <li>Specify data regime</li>
+            <li>Refine method properties</li>
+            <li>Review candidate methods</li>
+            <li>Suggest additions through curation</li>
+          </ol>
+        </div>
+
         <div class="metric-panel">
           <div>
             <span class="metric" id="methodCount">0</span>
@@ -50,11 +63,19 @@
             <span class="metric" id="familyCount">0</span>
             <span class="metric-label">method families</span>
           </div>
+          <div>
+            <span class="metric" id="curationCount">0</span>
+            <span class="metric-label">rows need curation</span>
+          </div>
         </div>
-        <div class="figure-strip">
+
+        <details class="figure-details">
+          <summary>View review framework figures</summary>
+          <div class="figure-strip">
           <img src="assets/multimodal-axes.png" alt="Conceptual axes for multimodal data regimes and model properties" />
           <img src="assets/method-families.png" alt="Overview of multimodal integration method families" />
-        </div>
+          </div>
+        </details>
       </section>
 
       <section class="workspace" aria-label="Method search">
@@ -69,45 +90,53 @@
             <input id="searchInput" type="search" placeholder="Method or family" />
           </label>
 
-          <label class="field">
-            <span>Data pairedness</span>
-            <select id="data_pairedness"></select>
-          </label>
+          <fieldset class="filter-group">
+            <legend>Data regime</legend>
+            <label class="field">
+              <span>Correspondence</span>
+              <select id="data_pairedness"></select>
+            </label>
+            <label class="field">
+              <span>Missingness</span>
+              <select id="data_missingness"></select>
+            </label>
+          </fieldset>
 
-          <label class="field">
-            <span>Missingness</span>
-            <select id="data_missingness"></select>
-          </label>
+          <fieldset class="filter-group">
+            <legend>Method specification</legend>
+            <label class="field">
+              <span>Method family</span>
+              <select id="method_family"></select>
+            </label>
+            <label class="field">
+              <span>Integration level</span>
+              <select id="method_integration_level"></select>
+            </label>
+            <label class="field">
+              <span>Uncertainty</span>
+              <select id="method_uncertainty"></select>
+            </label>
+            <label class="field">
+              <span>Prior knowledge</span>
+              <select id="method_prior_knowledge"></select>
+            </label>
+          </fieldset>
 
-          <label class="field">
-            <span>Integration level</span>
-            <select id="method_integration_level"></select>
-          </label>
+          <fieldset class="filter-group">
+            <legend>Supervision</legend>
+            <label class="field">
+              <span>Supervision class</span>
+              <select id="supervision"></select>
+            </label>
+          </fieldset>
 
-          <label class="field">
-            <span>Uncertainty</span>
-            <select id="method_uncertainty"></select>
-          </label>
-
-          <label class="field">
-            <span>Prior knowledge</span>
-            <select id="method_prior_knowledge"></select>
-          </label>
-
-          <label class="field">
-            <span>Supervision</span>
-            <select id="supervision"></select>
-          </label>
-
-          <label class="field">
-            <span>Application task</span>
-            <select id="application_task"></select>
-          </label>
-
-          <label class="field">
-            <span>Method family</span>
-            <select id="method_family"></select>
-          </label>
+          <fieldset class="filter-group">
+            <legend>Application type</legend>
+            <label class="field">
+              <span>Application task</span>
+              <select id="application_task"></select>
+            </label>
+          </fieldset>
 
           <div class="filter-note">
             Empty selections are treated as unspecified. Results are ranked by
@@ -131,6 +160,78 @@
         </section>
       </section>
     </main>
+
+    <dialog id="suggestDialog" class="suggest-dialog">
+      <form method="dialog" class="suggest-form">
+        <div class="dialog-head">
+          <div>
+            <p class="section-kicker">Curation workflow</p>
+            <h2>Suggest a method</h2>
+          </div>
+          <button id="closeSuggestDialog" class="link-button" type="button">Close</button>
+        </div>
+
+        <p class="dialog-copy">
+          Fill the fields you know. The atlas will generate a GitHub issue and a
+          candidate CSV row for curator review.
+        </p>
+
+        <div class="suggest-grid">
+          <label class="field">
+            <span>Method name</span>
+            <input id="suggestMethod" type="text" placeholder="e.g. NewMethod" />
+          </label>
+          <label class="field">
+            <span>Citation or DOI</span>
+            <input id="suggestCitation" type="text" placeholder="DOI, preprint, repository, or paper URL" />
+          </label>
+          <label class="field">
+            <span>Method family</span>
+            <select id="suggestFamily"></select>
+          </label>
+          <label class="field">
+            <span>Correspondence</span>
+            <select id="suggestPairedness"></select>
+          </label>
+          <label class="field">
+            <span>Missingness</span>
+            <select id="suggestMissingness"></select>
+          </label>
+          <label class="field">
+            <span>Integration level</span>
+            <select id="suggestLevel"></select>
+          </label>
+          <label class="field">
+            <span>Uncertainty</span>
+            <select id="suggestUncertainty"></select>
+          </label>
+          <label class="field">
+            <span>Prior knowledge</span>
+            <select id="suggestPrior"></select>
+          </label>
+          <label class="field">
+            <span>Application task</span>
+            <input id="suggestTask" type="text" placeholder="e.g. Discovery+Imputation" />
+          </label>
+          <label class="field">
+            <span>Rationale</span>
+            <textarea id="suggestRationale" rows="4" placeholder="Short evidence for the classification"></textarea>
+          </label>
+        </div>
+
+        <label class="field">
+          <span>Candidate CSV row</span>
+          <textarea id="suggestCsvRow" rows="4" readonly></textarea>
+        </label>
+
+        <div class="dialog-actions">
+          <button id="copyCsvRow" class="button secondary" type="button">Copy CSV row</button>
+          <a id="openIssueLink" class="button primary" target="_blank" rel="noreferrer" href="https://github.com/storaged/multimodal-integration-atlas/issues/new">
+            Open GitHub issue
+          </a>
+        </div>
+      </form>
+    </dialog>
 
     <footer class="site-footer">
       <p>

@@ -4,7 +4,11 @@ Contributions are welcome when they improve the scientific accuracy, coverage, o
 
 ## Suggesting a Method
 
-Use the GitHub issue template named `Method suggestion`. Please include:
+Use the `Suggest method` form on the website or the GitHub issue template named
+`Method suggestion`. The website form produces a candidate CSV row so curators
+can review and copy classifications more easily.
+
+Please include:
 
 - method name
 - citation or DOI
