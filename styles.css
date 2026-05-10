@@ -4,10 +4,10 @@
   --line: #d8dee5;
   --panel: #ffffff;
   --soft: #f8fafb;
-  --blue: #1774d1;
-  --teal: #30b8ad;
-  --green: #6aa64b;
-  --magenta: #b76aa7;
+  --violet: #a79ac8;
+  --lavender: #c2d1ff;
+  --plum: #a05590;
+  --mauve: #b27eb9;
   --shadow: 0 10px 24px rgba(26, 36, 48, 0.06);
 }
 
@@ -25,7 +25,7 @@ body {
 }
 
 a {
-  color: var(--blue);
+  color: var(--plum);
   text-decoration: none;
 }
 
@@ -50,7 +50,7 @@ a:hover {
 
 .eyebrow {
   margin: 0 0 8px;
-  color: var(--teal);
+  color: var(--plum);
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -59,7 +59,7 @@ a:hover {
 
 .section-kicker {
   margin: 0 0 8px;
-  color: var(--teal);
+  color: var(--plum);
   font-size: 0.76rem;
   font-weight: 700;
   letter-spacing: 0.07em;
@@ -116,8 +116,8 @@ button {
 }
 
 .button.primary {
-  border-color: var(--blue);
-  background: var(--blue);
+  border-color: var(--plum);
+  background: var(--plum);
   color: #ffffff;
 }
 
@@ -128,7 +128,7 @@ button {
 .button:hover,
 button:hover {
   text-decoration: none;
-  box-shadow: 0 0 0 3px rgba(11, 91, 211, 0.12);
+  box-shadow: 0 0 0 3px rgba(194, 209, 255, 0.65);
 }
 
 .link-button {
@@ -136,7 +136,7 @@ button:hover {
   border: 0;
   padding: 0;
   background: transparent;
-  color: var(--blue);
+  color: var(--plum);
 }
 
 main {
@@ -339,14 +339,14 @@ select:focus,
 textarea:focus,
 button:focus-visible,
 a:focus-visible {
-  outline: 3px solid rgba(47, 185, 173, 0.28);
+  outline: 3px solid rgba(194, 209, 255, 0.75);
   outline-offset: 2px;
 }
 
 .filter-note {
   margin-top: 0;
   padding: 10px;
-  border-left: 3px solid var(--green);
+  border-left: 3px solid var(--violet);
   background: #f5fbfa;
   color: var(--muted);
   font-size: 0.84rem;
@@ -409,8 +409,8 @@ a:focus-visible {
   min-width: 68px;
   border-radius: 6px;
   padding: 4px 8px;
-  background: rgba(23, 116, 209, 0.1);
-  color: #11528f;
+  background: rgba(194, 209, 255, 0.45);
+  color: #4c4271;
   font-size: 0.82rem;
   font-weight: 700;
   text-align: center;
@@ -446,6 +446,32 @@ a:focus-visible {
   font-weight: 700;
 }
 
+.method-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.method-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  border: 1px solid rgba(167, 154, 200, 0.55);
+  border-radius: 5px;
+  padding: 3px 8px;
+  background: rgba(194, 209, 255, 0.22);
+  color: #6f3f68;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.method-link.missing {
+  border-color: #d8dee5;
+  background: #fbfcfd;
+  color: var(--muted);
+}
+
 .status {
   display: inline-flex;
   align-items: center;
@@ -457,12 +483,12 @@ a:focus-visible {
 }
 
 .status.curated {
-  background: rgba(106, 166, 75, 0.13);
-  color: #3f6f2a;
+  background: rgba(167, 154, 200, 0.18);
+  color: #5a4c83;
 }
 
 .status.needs-curation {
-  background: rgba(183, 106, 167, 0.14);
+  background: rgba(178, 126, 185, 0.16);
   color: #814575;
 }
 

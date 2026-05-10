@@ -23,7 +23,6 @@ const axisLabels = {
   axis_application_level: "Application level",
   axis_supervision: "Supervision",
   application_primary_task: "Application type",
-  source_table: "Source",
 };
 
 let methods = [];
@@ -109,6 +108,21 @@ function csvEscape(value) {
   const safe = value || "";
   if (/[",\n]/.test(safe)) return `"${safe.replaceAll('"', '""')}"`;
   return safe;
+}
+
+function normalizedDoi(value) {
+  return (value || "")
+    .trim()
+    .replace(/^https?:\/\/(dx\.)?doi\.org\//i, "")
+    .match(/^10\.\S+$/)?.[0] || "";
+}
+
+function publicationUrlFromCitation(value) {
+  const clean = (value || "").trim();
+  const doi = normalizedDoi(clean);
+  if (doi) return `https://doi.org/${doi}`;
+  if (/^https?:\/\//i.test(clean)) return clean;
+  return "";
 }
 
 function selectOptions(id) {
@@ -197,6 +211,8 @@ function methodMatches(method, filters) {
       method.axis_latent_design,
       method.axis_architecture,
       method.axis_application_level,
+      method.method_doi,
+      method.resource_url,
     ]
       .join(" ")
       .toLowerCase();
@@ -253,16 +269,35 @@ function axisBlock(label, value) {
   `;
 }
 
+function hasCurationValue(value) {
+  return value && value !== "to_be_curated";
+}
+
+function methodLink(label, url, missingLabel) {
+  if (!hasCurationValue(url)) {
+    return `<span class="method-link missing">${missingLabel}</span>`;
+  }
+  return `<a class="method-link" href="${url}" target="_blank" rel="noreferrer">${label}</a>`;
+}
+
 function renderMethod(method, score) {
   const statusClass = method.needs_curation === "yes" ? "needs-curation" : "curated";
   const statusText = method.needs_curation === "yes" ? "Needs curation" : "Curated";
   const scoreText = score ? `${score} matched` : "No filters";
+  const doiLabel = hasCurationValue(method.method_doi) ? `DOI: ${method.method_doi}` : "DOI to curate";
+  const resourceLabel = hasCurationValue(method.resource_type)
+    ? `Resource: ${labelize(method.resource_type)}`
+    : "Resource to curate";
   return `
     <article class="method-card">
       <div class="method-topline">
         <div>
           <h3>${method.method}</h3>
           <div class="method-meta">${method.method_family} · ${labelize(method.method_scope)}</div>
+          <div class="method-links">
+            ${methodLink(doiLabel, method.publication_url, "DOI to curate")}
+            ${methodLink(resourceLabel, method.resource_url, "Resource to curate")}
+          </div>
         </div>
         <div class="score">${scoreText}</div>
       </div>
@@ -276,7 +311,6 @@ function renderMethod(method, score) {
         ${axisBlock(axisLabels.axis_application_level, method.axis_application_level)}
         ${axisBlock(axisLabels.axis_supervision, method.axis_supervision)}
         ${axisBlock(axisLabels.application_primary_task, method.application_primary_task)}
-        ${axisBlock(axisLabels.source_table, method.source_table)}
       </div>
       <span class="status ${statusClass}">${statusText}</span>
     </article>
@@ -299,11 +333,18 @@ function candidateCsvRow() {
   const task = suggestionValue("suggestTask");
   const granularity = suggestionValue("suggestLevel");
   const citation = suggestionValue("suggestCitation");
+  const resourceUrl = suggestionValue("suggestResourceUrl");
+  const resourceType = suggestionValue("suggestResourceType");
+  const doi = normalizedDoi(citation);
   const row = [
     slugify(method),
     method,
     family,
     "",
+    doi,
+    publicationUrlFromCitation(citation),
+    resourceUrl,
+    resourceType,
     suggestionValue("suggestPairedness"),
     suggestionValue("suggestMissingness"),
     granularity,
@@ -336,6 +377,8 @@ function issueUrl() {
     "",
     `- Method: ${method}`,
     `- Citation or DOI: ${suggestionValue("suggestCitation") || "not provided"}`,
+    `- Online tool/resource: ${suggestionValue("suggestResourceUrl") || "not provided"}`,
+    `- Resource type: ${suggestionValue("suggestResourceType") || "unspecified"}`,
     `- Method family: ${suggestionValue("suggestFamily") || "unspecified"}`,
     `- Correspondence: ${suggestionValue("suggestPairedness") || "unspecified"}`,
     `- Missingness: ${suggestionValue("suggestMissingness") || "unspecified"}`,
@@ -436,11 +479,11 @@ async function init() {
   const csv = await response.text();
   methods = parseCsv(csv);
   document.getElementById("methodCount").textContent = methods.length;
-  document.getElementById("familyCount").textContent = new Set(
-    methods.map((method) => method.method_family),
-  ).size;
-  document.getElementById("curationCount").textContent = methods.filter(
-    (method) => method.needs_curation === "yes",
+  document.getElementById("doiCount").textContent = methods.filter(
+    (method) => hasCurationValue(method.publication_url),
+  ).length;
+  document.getElementById("resourceCount").textContent = methods.filter(
+    (method) => hasCurationValue(method.resource_url),
   ).length;
   populateSelects();
   populateSuggestionSelects();

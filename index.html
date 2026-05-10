@@ -60,12 +60,12 @@
             <span class="metric-label">visible after filters</span>
           </div>
           <div>
-            <span class="metric" id="familyCount">0</span>
-            <span class="metric-label">method families</span>
+            <span class="metric" id="doiCount">0</span>
+            <span class="metric-label">publication links</span>
           </div>
           <div>
-            <span class="metric" id="curationCount">0</span>
-            <span class="metric-label">rows need curation</span>
+            <span class="metric" id="resourceCount">0</span>
+            <span class="metric-label">resource links</span>
           </div>
         </div>
 
@@ -191,6 +191,14 @@
           <label class="field">
             <span>Citation or DOI</span>
             <input id="suggestCitation" type="text" placeholder="DOI, preprint, repository, or paper URL" />
+          </label>
+          <label class="field">
+            <span>Online tool/resource</span>
+            <input id="suggestResourceUrl" type="text" placeholder="GitHub, package, web service, or documentation URL" />
+          </label>
+          <label class="field">
+            <span>Resource type</span>
+            <input id="suggestResourceType" type="text" placeholder="software, package, web service, documentation" />
           </label>
           <label class="field">
             <span>Method family</span>

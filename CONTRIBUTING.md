@@ -12,6 +12,8 @@ Please include:
 
 - method name
 - citation or DOI
+- online tool/resource URL, if available
+- resource type, if available
 - method family
 - correspondence
 - missingness
