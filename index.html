@@ -18,7 +18,7 @@
           <h1>Multimodal Integration Atlas</h1>
           <p class="lede">
             Search a curated library of multimodal biology methods by data regime,
-            modelling assumptions, supervision, and intended task.
+            modelling formalism, application level, supervision, and intended task.
           </p>
         </div>
         <nav class="header-actions" aria-label="Repository links">
@@ -79,9 +79,12 @@
       </section>
 
       <section class="workspace" aria-label="Method search">
-        <aside class="filters" aria-label="Filters">
+        <section class="filters" aria-label="Filters">
           <div class="filters-head">
-            <h2>Filters</h2>
+            <div>
+              <p class="section-kicker">Filter by review axes</p>
+              <h2>Method properties</h2>
+            </div>
             <button id="clearFilters" class="link-button" type="button">Clear</button>
           </div>
 
@@ -94,55 +97,59 @@
             <legend>Data regime</legend>
             <label class="field">
               <span>Correspondence</span>
-              <select id="data_pairedness"></select>
+              <select id="axis_correspondence"></select>
             </label>
             <label class="field">
               <span>Missingness</span>
-              <select id="data_missingness"></select>
+              <select id="axis_missingness"></select>
+            </label>
+            <label class="field">
+              <span>Granularity</span>
+              <select id="axis_granularity"></select>
             </label>
           </fieldset>
 
           <fieldset class="filter-group">
-            <legend>Method specification</legend>
-            <label class="field">
-              <span>Method family</span>
-              <select id="method_family"></select>
-            </label>
-            <label class="field">
-              <span>Integration level</span>
-              <select id="method_integration_level"></select>
-            </label>
-            <label class="field">
-              <span>Uncertainty</span>
-              <select id="method_uncertainty"></select>
-            </label>
+            <legend>Modelling formalism and interpretability</legend>
             <label class="field">
               <span>Prior knowledge</span>
-              <select id="method_prior_knowledge"></select>
+              <select id="axis_prior_knowledge"></select>
+            </label>
+            <label class="field">
+              <span>Latent design</span>
+              <select id="axis_latent_design"></select>
+            </label>
+            <label class="field">
+              <span>Architecture</span>
+              <select id="axis_architecture"></select>
             </label>
           </fieldset>
 
           <fieldset class="filter-group">
-            <legend>Supervision</legend>
+            <legend>Application level</legend>
             <label class="field">
-              <span>Supervision class</span>
-              <select id="supervision"></select>
+              <span>Application level</span>
+              <select id="axis_application_level"></select>
             </label>
-          </fieldset>
-
-          <fieldset class="filter-group">
-            <legend>Application type</legend>
             <label class="field">
-              <span>Application task</span>
+              <span>Application type</span>
               <select id="application_task"></select>
             </label>
           </fieldset>
 
-          <div class="filter-note">
-            Empty selections are treated as unspecified. Results are ranked by
-            matched axes before alphabetical order.
-          </div>
-        </aside>
+          <fieldset class="filter-group">
+            <legend>Supervision and family</legend>
+            <label class="field">
+              <span>Supervision</span>
+              <select id="axis_supervision"></select>
+            </label>
+            <label class="field">
+              <span>Method family</span>
+              <select id="method_family"></select>
+            </label>
+          </fieldset>
+
+        </section>
 
         <section class="results" aria-label="Method results">
           <div class="results-toolbar">
@@ -198,16 +205,28 @@
             <select id="suggestMissingness"></select>
           </label>
           <label class="field">
-            <span>Integration level</span>
+            <span>Granularity</span>
             <select id="suggestLevel"></select>
           </label>
           <label class="field">
-            <span>Uncertainty</span>
-            <select id="suggestUncertainty"></select>
+            <span>Architecture</span>
+            <select id="suggestArchitecture"></select>
           </label>
           <label class="field">
             <span>Prior knowledge</span>
             <select id="suggestPrior"></select>
+          </label>
+          <label class="field">
+            <span>Latent design</span>
+            <select id="suggestLatent"></select>
+          </label>
+          <label class="field">
+            <span>Application level</span>
+            <select id="suggestApplicationLevel"></select>
+          </label>
+          <label class="field">
+            <span>Supervision</span>
+            <select id="suggestSupervision"></select>
           </label>
           <label class="field">
             <span>Application task</span>

@@ -1,8 +1,8 @@
 # Method Library Schema
 
-The app reads `data/integration_methods_library.csv`. Each row describes one integration method.
+The app reads `data/integration_methods_library.csv`. Each row describes one integration method and exposes the review axes used in the manuscript section on current methods and their mathematical foundations.
 
-## Columns
+## Core Columns
 
 | Column | Meaning |
 | --- | --- |
@@ -10,33 +10,33 @@ The app reads `data/integration_methods_library.csv`. Each row describes one int
 | `method` | Display name. |
 | `method_family` | Curated family, such as `Deterministic`, `Probabilistic`, `VAE / Representation learning`, `Foundation models`, `MIL`, or `Contrastive learning`. |
 | `method_scope` | Broad source group: `analytical` or `deep_learning`. |
-| `source_table` | Manuscript supplementary table provenance. |
-| `source_docx_table_index` | Original DOCX table index used during extraction. |
-| `source_docx_row_index` | Original DOCX row index used during extraction. |
-| `data_pairedness` | Pairing assumption: `paired`, `partial`, or `unpaired`. |
-| `data_missingness` | Missingness setting: `none`, `partial`, `modality`, or `generative`. |
-| `method_integration_level` | Integration level: `single` or `multi`. |
-| `method_uncertainty` | Whether uncertainty is modelled explicitly: `yes` or `no`. |
-| `method_prior_knowledge` | Prior knowledge type: `none`, `structure`, `supervision`, or `soft`. |
+| `axis_correspondence` | Data correspondence axis: `paired`, `partial`, `unpaired`, or `to_be_curated`. |
+| `axis_missingness` | Missingness axis: `none`, `partial`, `modality`, `generative`, or `to_be_curated`. |
+| `axis_granularity` | Granularity axis: `single-level`, `multi-level`, or `to_be_curated`. |
+| `axis_prior_knowledge` | Prior knowledge axis: `none`, `structure`, `supervision`, `soft`, or `to_be_curated`. |
+| `axis_latent_design` | Latent design axis: `structured`, `unstructured`, or `to_be_curated`. |
+| `axis_architecture` | Architecture axis: `white-box`, `black-box`, or `to_be_curated`. |
+| `axis_application_level` | Application level axis: `general-purpose`, `application-driven`, or `to_be_curated`. |
+| `axis_supervision` | Supervision axis used by the method entry. |
 | `application_primary_task` | Main task label from the manuscript table. |
-| `supervision` | Derived supervision class used by the UI. |
 | `application_tasks` | Semicolon-delimited task list derived from `application_primary_task`. |
 | `needs_curation` | `yes` for rows with incomplete axis values. |
 | `curation_notes` | Free-text curator note. |
 
-## Controlled Values
+## Provenance Columns
 
-The current app assumes controlled values for filterable axes. If a new value is needed, add it consistently across rows and update this document.
-
-Recommended values:
-
-- `data_pairedness`: `paired`, `partial`, `unpaired`
-- `data_missingness`: `none`, `partial`, `modality`, `generative`
-- `method_integration_level`: `single`, `multi`
-- `method_uncertainty`: `yes`, `no`
-- `method_prior_knowledge`: `none`, `structure`, `supervision`, `soft`
-- `method_scope`: `analytical`, `deep_learning`
+| Column | Meaning |
+| --- | --- |
+| `source_table` | Manuscript supplementary table provenance. |
+| `source_docx_table_index` | Original DOCX table index used during extraction. |
+| `source_docx_row_index` | Original DOCX row index used during extraction. |
+| `data_pairedness` | Legacy extracted value retained for audit. |
+| `data_missingness` | Legacy extracted value retained for audit. |
+| `method_integration_level` | Legacy extracted value retained for audit. |
+| `method_uncertainty` | Legacy extracted value retained for audit, not a central review-axis filter. |
+| `method_prior_knowledge` | Legacy extracted value retained for audit. |
+| `supervision` | Legacy extracted supervision value retained for audit. |
 
 ## Curation Standard
 
-Each new method should include all filterable axis values, a clear method family, and at least one application task. If evidence is ambiguous, keep `needs_curation=yes` and explain the uncertainty in `curation_notes`.
+Each new method should include the six central axes, application level, supervision, a clear method family, and at least one application type. If evidence is ambiguous, keep `needs_curation=yes` and explain the judgement call in `curation_notes`.

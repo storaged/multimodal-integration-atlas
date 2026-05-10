@@ -13,11 +13,14 @@ Please include:
 - method name
 - citation or DOI
 - method family
-- data pairedness
-- missingness regime
-- integration level
-- uncertainty handling
+- correspondence
+- missingness
+- granularity
 - prior knowledge category
+- latent design
+- architecture
+- application level
+- supervision
 - primary application task
 - short rationale for the classification
 

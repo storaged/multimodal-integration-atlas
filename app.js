@@ -1,36 +1,43 @@
 const DATA_URL = "data/integration_methods_library.csv";
 
 const filterConfig = [
-  { id: "data_pairedness", label: "Data pairedness" },
-  { id: "data_missingness", label: "Missingness" },
+  { id: "axis_correspondence", label: "Correspondence" },
+  { id: "axis_missingness", label: "Missingness" },
+  { id: "axis_granularity", label: "Granularity" },
+  { id: "axis_prior_knowledge", label: "Prior knowledge" },
+  { id: "axis_latent_design", label: "Latent design" },
+  { id: "axis_architecture", label: "Architecture" },
+  { id: "axis_application_level", label: "Application level" },
+  { id: "application_task", label: "Application type" },
+  { id: "axis_supervision", label: "Supervision" },
   { id: "method_family", label: "Method family" },
-  { id: "method_integration_level", label: "Integration level" },
-  { id: "method_uncertainty", label: "Uncertainty" },
-  { id: "method_prior_knowledge", label: "Prior knowledge" },
-  { id: "supervision", label: "Supervision" },
-  { id: "application_task", label: "Application task" },
 ];
 
 const axisLabels = {
-  data_pairedness: "Pairedness",
-  data_missingness: "Missingness",
-  method_integration_level: "Level",
-  method_uncertainty: "Uncertainty",
-  method_prior_knowledge: "Prior",
-  supervision: "Supervision",
-  application_primary_task: "Primary task",
-  method_family: "Family",
+  axis_correspondence: "Correspondence",
+  axis_missingness: "Missingness",
+  axis_granularity: "Granularity",
+  axis_prior_knowledge: "Prior knowledge",
+  axis_latent_design: "Latent design",
+  axis_architecture: "Architecture",
+  axis_application_level: "Application level",
+  axis_supervision: "Supervision",
+  application_primary_task: "Application type",
+  source_table: "Source",
 };
 
 let methods = [];
 
 const suggestionSelects = [
   { id: "suggestFamily", source: "method_family", fallback: ["Other / unsure"] },
-  { id: "suggestPairedness", source: "data_pairedness", fallback: ["unsure"] },
-  { id: "suggestMissingness", source: "data_missingness", fallback: ["unsure"] },
-  { id: "suggestLevel", source: "method_integration_level", fallback: ["unsure"] },
-  { id: "suggestUncertainty", source: "method_uncertainty", fallback: ["unsure"] },
-  { id: "suggestPrior", source: "method_prior_knowledge", fallback: ["unsure"] },
+  { id: "suggestPairedness", source: "axis_correspondence", fallback: ["unsure"] },
+  { id: "suggestMissingness", source: "axis_missingness", fallback: ["unsure"] },
+  { id: "suggestLevel", source: "axis_granularity", fallback: ["unsure"] },
+  { id: "suggestPrior", source: "axis_prior_knowledge", fallback: ["unsure"] },
+  { id: "suggestLatent", source: "axis_latent_design", fallback: ["unsure"] },
+  { id: "suggestArchitecture", source: "axis_architecture", fallback: ["unsure"] },
+  { id: "suggestApplicationLevel", source: "axis_application_level", fallback: ["unsure"] },
+  { id: "suggestSupervision", source: "axis_supervision", fallback: ["unsure"] },
 ];
 
 function parseCsv(text) {
@@ -186,7 +193,10 @@ function methodMatches(method, filters) {
       method.method_family,
       method.method_scope,
       method.application_primary_task,
-      method.method_prior_knowledge,
+      method.axis_prior_knowledge,
+      method.axis_latent_design,
+      method.axis_architecture,
+      method.axis_application_level,
     ]
       .join(" ")
       .toLowerCase();
@@ -257,14 +267,16 @@ function renderMethod(method, score) {
         <div class="score">${scoreText}</div>
       </div>
       <div class="axis-grid">
-        ${axisBlock(axisLabels.data_pairedness, method.data_pairedness)}
-        ${axisBlock(axisLabels.data_missingness, method.data_missingness)}
-        ${axisBlock(axisLabels.method_integration_level, method.method_integration_level)}
-        ${axisBlock(axisLabels.method_uncertainty, method.method_uncertainty)}
-        ${axisBlock(axisLabels.method_prior_knowledge, method.method_prior_knowledge)}
-        ${axisBlock(axisLabels.supervision, method.supervision)}
+        ${axisBlock(axisLabels.axis_correspondence, method.axis_correspondence)}
+        ${axisBlock(axisLabels.axis_missingness, method.axis_missingness)}
+        ${axisBlock(axisLabels.axis_granularity, method.axis_granularity)}
+        ${axisBlock(axisLabels.axis_prior_knowledge, method.axis_prior_knowledge)}
+        ${axisBlock(axisLabels.axis_latent_design, method.axis_latent_design)}
+        ${axisBlock(axisLabels.axis_architecture, method.axis_architecture)}
+        ${axisBlock(axisLabels.axis_application_level, method.axis_application_level)}
+        ${axisBlock(axisLabels.axis_supervision, method.axis_supervision)}
         ${axisBlock(axisLabels.application_primary_task, method.application_primary_task)}
-        ${axisBlock("Source", method.source_table)}
+        ${axisBlock(axisLabels.source_table, method.source_table)}
       </div>
       <span class="status ${statusClass}">${statusText}</span>
     </article>
@@ -275,28 +287,44 @@ function suggestionValue(id) {
   return document.getElementById(id).value.trim();
 }
 
+function legacyGranularity(value) {
+  if (value === "single-level") return "single";
+  if (value === "multi-level") return "multi";
+  return "";
+}
+
 function candidateCsvRow() {
   const method = suggestionValue("suggestMethod");
   const family = suggestionValue("suggestFamily");
   const task = suggestionValue("suggestTask");
+  const granularity = suggestionValue("suggestLevel");
+  const citation = suggestionValue("suggestCitation");
   const row = [
     slugify(method),
     method,
     family,
     "",
+    suggestionValue("suggestPairedness"),
+    suggestionValue("suggestMissingness"),
+    granularity,
+    suggestionValue("suggestPrior"),
+    suggestionValue("suggestLatent"),
+    suggestionValue("suggestArchitecture"),
+    suggestionValue("suggestApplicationLevel"),
+    suggestionValue("suggestSupervision"),
     "Community suggestion",
     "",
     "",
     suggestionValue("suggestPairedness"),
     suggestionValue("suggestMissingness"),
-    suggestionValue("suggestLevel"),
-    suggestionValue("suggestUncertainty"),
+    legacyGranularity(granularity),
+    "",
     suggestionValue("suggestPrior"),
     task,
-    "",
+    suggestionValue("suggestSupervision"),
     task.replace(/\s*\+\s*/g, ";"),
     "yes",
-    `suggested citation: ${suggestionValue("suggestCitation")}`,
+    `suggested citation: ${citation}`,
   ];
   return row.map(csvEscape).join(",");
 }
@@ -309,12 +337,15 @@ function issueUrl() {
     `- Method: ${method}`,
     `- Citation or DOI: ${suggestionValue("suggestCitation") || "not provided"}`,
     `- Method family: ${suggestionValue("suggestFamily") || "unspecified"}`,
-    `- Data pairedness: ${suggestionValue("suggestPairedness") || "unspecified"}`,
+    `- Correspondence: ${suggestionValue("suggestPairedness") || "unspecified"}`,
     `- Missingness: ${suggestionValue("suggestMissingness") || "unspecified"}`,
-    `- Integration level: ${suggestionValue("suggestLevel") || "unspecified"}`,
-    `- Uncertainty: ${suggestionValue("suggestUncertainty") || "unspecified"}`,
+    `- Granularity: ${suggestionValue("suggestLevel") || "unspecified"}`,
     `- Prior knowledge: ${suggestionValue("suggestPrior") || "unspecified"}`,
-    `- Primary application task: ${suggestionValue("suggestTask") || "unspecified"}`,
+    `- Latent design: ${suggestionValue("suggestLatent") || "unspecified"}`,
+    `- Architecture: ${suggestionValue("suggestArchitecture") || "unspecified"}`,
+    `- Application level: ${suggestionValue("suggestApplicationLevel") || "unspecified"}`,
+    `- Supervision: ${suggestionValue("suggestSupervision") || "unspecified"}`,
+    `- Application type: ${suggestionValue("suggestTask") || "unspecified"}`,
     "",
     "## Evidence and rationale",
     "",
