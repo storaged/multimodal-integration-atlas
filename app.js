@@ -546,9 +546,11 @@ function attachEvents() {
   });
 
   const dialog = document.getElementById("suggestDialog");
-  document.getElementById("openSuggestDialog").addEventListener("click", () => {
-    updateSuggestionOutput();
-    dialog.showModal();
+  document.querySelectorAll(".open-suggest-dialog").forEach((trigger) => {
+    trigger.addEventListener("click", () => {
+      updateSuggestionOutput();
+      dialog.showModal();
+    });
   });
   document.getElementById("closeSuggestDialog").addEventListener("click", () => {
     dialog.close();

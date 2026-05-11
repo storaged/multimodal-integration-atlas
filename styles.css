@@ -34,6 +34,9 @@ a:hover {
 }
 
 .site-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
   background: #ffffff;
   border-bottom: 1px solid var(--line);
 }
@@ -41,11 +44,21 @@ a:hover {
 .header-inner {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 24px 24px 22px;
+  padding: 12px 24px;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: 28px;
-  align-items: end;
+  gap: 24px;
+  align-items: center;
+}
+
+.site-mark {
+  color: var(--ink);
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.site-mark:hover {
+  text-decoration: none;
 }
 
 .eyebrow {
@@ -94,11 +107,39 @@ h2 {
   font-size: 0.98rem;
 }
 
-.header-actions,
+.header-actions {
+  justify-content: flex-end;
+}
+
+.header-actions a,
+.header-actions button {
+  min-height: auto;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--ink);
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.header-actions a:hover,
+.header-actions button:hover {
+  color: var(--plum);
+  box-shadow: none;
+  text-decoration: none;
+}
+
 .toolbar-controls {
   display: flex;
   align-items: center;
   gap: 10px;
+  flex-wrap: wrap;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
   flex-wrap: wrap;
 }
 
@@ -143,6 +184,61 @@ main {
   max-width: 1280px;
   margin: 0 auto;
   padding: 18px 24px 24px;
+}
+
+.hero {
+  position: relative;
+  min-height: min(720px, calc(100vh - 64px));
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-bottom: 1px solid var(--line);
+}
+
+.hero img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  width: min(860px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 72px 0;
+  text-align: center;
+}
+
+.hero h1 {
+  margin-bottom: 18px;
+  font-size: clamp(3rem, 7vw, 6rem);
+  line-height: 0.98;
+  color: #171b58;
+}
+
+.hero .lede {
+  max-width: 780px;
+  margin: 0 auto;
+  color: #2d3657;
+  font-size: clamp(1rem, 1.5vw, 1.25rem);
+}
+
+.hero-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 30px;
 }
 
 .overview {
@@ -296,6 +392,38 @@ main {
   padding: 16px;
   background: var(--panel);
   box-shadow: var(--shadow);
+}
+
+.authors-section {
+  margin-bottom: 18px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 16px;
+  background: var(--panel);
+  box-shadow: var(--shadow);
+}
+
+.authors-list {
+  max-width: 1120px;
+  margin-bottom: 18px;
+  color: #263241;
+  font-size: 0.98rem;
+  line-height: 1.75;
+}
+
+.authors-list sup {
+  color: var(--plum);
+  font-size: 0.72em;
+  font-weight: 700;
+}
+
+.affiliations-list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 20px;
+  color: var(--muted);
+  font-size: 0.9rem;
 }
 
 .section-head {
@@ -691,6 +819,15 @@ a:focus-visible {
 
   .intro-panel {
     grid-template-columns: 1fr;
+  }
+
+  .header-inner {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .header-actions {
+    justify-content: flex-start;
   }
 
   .value-points,

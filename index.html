@@ -13,25 +13,38 @@
   <body>
     <header class="site-header">
       <div class="header-inner">
-        <div>
-          <p class="eyebrow">Research-created method library</p>
-          <h1>Multimodal Integration Atlas</h1>
-          <p class="lede">
-            A human-curated, review-backed atlas for matching multimodal
-            integration methods to data regimes, modelling assumptions,
-            supervision settings, and intended tasks.
-          </p>
-        </div>
-        <nav class="header-actions" aria-label="Repository links">
-          <a class="button secondary" href="#atlas">Browse atlas</a>
-          <a class="button secondary" href="#timeline">Timeline</a>
-          <a class="button secondary" href="docs/schema.md">Schema</a>
-          <button class="button primary" id="openSuggestDialog" type="button">
-            Suggest method
+        <a class="site-mark" href="#" aria-label="Multimodal Integration Atlas home">
+          Multimodal Integration Atlas
+        </a>
+        <nav class="header-actions" aria-label="Site navigation">
+          <a href="#atlas">Browse atlas</a>
+          <a href="#timeline">Timelines</a>
+          <button class="link-button open-suggest-dialog" type="button">
+            Contribute
           </button>
+          <a href="#authors">Authors</a>
         </nav>
       </div>
     </header>
+
+    <section class="hero" aria-label="Atlas introduction">
+      <img src="assets/landing_image_notext.png" alt="" />
+      <div class="hero-content">
+        <p class="eyebrow">Research-created method library</p>
+        <h1>Multimodal Integration Atlas</h1>
+        <p class="lede">
+          A human-curated, review-backed atlas for matching multimodal
+          integration methods to data regimes, modelling assumptions,
+          supervision settings, and intended tasks.
+        </p>
+        <div class="hero-actions">
+          <a class="button primary" href="#atlas">Browse atlas</a>
+          <button class="button primary open-suggest-dialog" type="button">
+            Contribute
+          </button>
+        </div>
+      </div>
+    </section>
 
     <main>
       <section class="overview" aria-label="Overview">
@@ -109,6 +122,36 @@
           </p>
         </div>
         <div id="timelineList" class="timeline-list"></div>
+      </section>
+
+      <section id="authors" class="authors-section" aria-label="Authors and affiliations">
+        <div class="section-head">
+          <div>
+            <p class="section-kicker">Article team</p>
+            <h2>Authors and affiliations</h2>
+          </div>
+          <p>
+            The atlas is maintained as a companion resource to the multimodal
+            integration review.
+          </p>
+        </div>
+        <p class="authors-list">
+          Krzysztof Gogolewski<sup>1</sup>, Małgorzata Łazęcka<sup>1</sup>,
+          Kazimierz Oksza-Orzechowski<sup>1</sup>, Lucas Arnoldt<sup>3,4</sup>,
+          Daria Romanovskaia<sup>3,6</sup>, Nikita Moshkov<sup>3</sup>,
+          Hassan Akell<sup>2</sup>, Valentina Beliaeva<sup>3,6</sup>,
+          Dinesh Haridoss<sup>2</sup>, Robert Pieniuta<sup>1</sup>,
+          Vladimir Shitov<sup>3,6</sup>, Malte Luecken<sup>3,6</sup>,
+          Fabian Theis<sup>3,4,5</sup>, Ewa Szczurek<sup>1,2</sup>
+        </p>
+        <ol class="affiliations-list">
+          <li>Faculty of Mathematics, Informatics and Mechanics, University of Warsaw, Warsaw, Poland</li>
+          <li>Institute of AI for Health, Helmholtz Munich, Neuherberg, Germany</li>
+          <li>Institute of Computational Biology, Helmholtz Munich, Neuherberg, Germany</li>
+          <li>TUM School of Life Sciences, Technical University of Munich, Germany</li>
+          <li>TUM, School of Computation, Information and Technology, Technical University of Munich, Germany</li>
+          <li>Institute of Lung Health &amp; Immunity, Helmholtz Munich; Member of the German Center for Lung Research (DZL), Munich, Germany</li>
+        </ol>
       </section>
 
       <section id="atlas" class="workspace" aria-label="Method search">
