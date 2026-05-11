@@ -505,7 +505,8 @@ function renderResults() {
       return a.method.method.localeCompare(b.method.method);
     });
 
-  document.getElementById("visibleCount").textContent = visible.length;
+  const visibleCount = document.getElementById("visibleCount");
+  if (visibleCount) visibleCount.textContent = visible.length;
   const resultMeta = document.getElementById("resultsMeta");
   const list = document.getElementById("resultsList");
   const showMore = document.getElementById("showMoreResults");
