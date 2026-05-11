@@ -17,12 +17,12 @@
           Multimodal Integration Atlas
         </a>
         <nav class="header-actions" aria-label="Site navigation">
-          <a href="#atlas">Browse atlas</a>
-          <a href="#timeline">Timelines</a>
+          <a href="index.html#atlas">Browse atlas</a>
+          <a href="timeline.html">Timelines</a>
           <button class="link-button open-suggest-dialog" type="button">
             Contribute
           </button>
-          <a href="#authors">Authors</a>
+          <a href="authors.html">Authors</a>
         </nav>
       </div>
     </header>
@@ -47,39 +47,48 @@
     </section>
 
     <main>
-      <section class="overview" aria-label="Overview">
-        <div class="intro-panel">
-          <div>
-            <p class="section-kicker">TL;DR</p>
-            <h2>A review taxonomy made inspectable and reusable</h2>
-            <p>
-              This atlas translates the review's conceptual axes into a
-              transparent method-selection resource. Entries are curated from
-              the literature and linked to primary publications and software
-              resources where available, rather than generated as opaque
-              recommendations.
-            </p>
-            <div class="value-points" aria-label="Atlas value">
-              <div>
-                <strong>Human-curated</strong>
-                <span>Classifications are maintained as a versioned table, not inferred at query time.</span>
-              </div>
-              <div>
-                <strong>Assumption-aware</strong>
-                <span>Filters follow the review axes: data regime, mathematical design, supervision, and task.</span>
-              </div>
-              <div>
-                <strong>Community-maintained</strong>
-                <span>Researchers can suggest updates through GitHub while curator review remains explicit.</span>
-              </div>
-            </div>
-          </div>
-          <ol class="workflow-list">
-            <li>Filter by data and task</li>
-            <li>Inspect methodological mechanism</li>
-            <li>Verify publication and resource links</li>
-            <li>Suggest curated extensions</li>
-          </ol>
+      <section id="about" class="overview" aria-label="About the atlas">
+        <div class="about-head">
+          <p class="section-kicker">About</p>
+          <h2>A review taxonomy made inspectable and reusable</h2>
+          <p>
+            This atlas translates the review's conceptual axes into a
+            transparent method-selection resource. Entries are curated from
+            the literature and linked to primary publications and software
+            resources where available, rather than generated as opaque
+            recommendations.
+          </p>
+        </div>
+
+        <div class="about-grid" aria-label="Atlas value">
+          <article class="about-card">
+            <span class="about-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M5 5h14v14H5z"/><path d="M5 10h14M10 5v14"/></svg>
+            </span>
+            <h3>Human-curated</h3>
+            <p>Classifications are maintained as a versioned table, not inferred at query time.</p>
+          </article>
+          <article class="about-card">
+            <span class="about-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M4 18h16"/><path d="M7 15V7M12 15V4M17 15v-5"/><path d="M5 7h4M10 4h4M15 10h4"/></svg>
+            </span>
+            <h3>Assumption-aware</h3>
+            <p>Filters follow the review axes: data regime, mathematical design, supervision, and task.</p>
+          </article>
+          <article class="about-card">
+            <span class="about-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M8 12h8"/><path d="M12 8v8"/><path d="M6 6h12v12H6z"/></svg>
+            </span>
+            <h3>Expandable</h3>
+            <p>Researchers can suggest new methods through a structured GitHub curation workflow.</p>
+          </article>
+          <article class="about-card">
+            <span class="about-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M10 7h4a5 5 0 0 1 0 10h-4"/><path d="M14 7h-4a5 5 0 0 0 0 10h4"/><path d="M8 12h8"/></svg>
+            </span>
+            <h3>Publication-linked</h3>
+            <p>DOI and software links keep recommendation context connected to primary evidence.</p>
+          </article>
         </div>
 
         <div class="metric-panel">
@@ -101,57 +110,6 @@
           </div>
         </div>
 
-        <details class="figure-details">
-          <summary>View review framework figures</summary>
-          <div class="figure-strip">
-          <img src="assets/multimodal-axes.png" alt="Conceptual axes for multimodal data regimes and model properties" />
-          <img src="assets/method-families.png" alt="Overview of multimodal integration method families" />
-          </div>
-        </details>
-      </section>
-
-      <section id="timeline" class="timeline-section" aria-label="Publication timeline">
-        <div class="section-head">
-          <div>
-            <p class="section-kicker">Method landscape</p>
-            <h2>Publication timeline</h2>
-          </div>
-          <p>
-            Generated from curated DOI metadata in the library. Dates are shown
-            when month-level publication metadata is available.
-          </p>
-        </div>
-        <div id="timelineList" class="timeline-list"></div>
-      </section>
-
-      <section id="authors" class="authors-section" aria-label="Authors and affiliations">
-        <div class="section-head">
-          <div>
-            <p class="section-kicker">Article team</p>
-            <h2>Authors and affiliations</h2>
-          </div>
-          <p>
-            The atlas is maintained as a companion resource to the multimodal
-            integration review.
-          </p>
-        </div>
-        <p class="authors-list">
-          Krzysztof Gogolewski<sup>1</sup>, Małgorzata Łazęcka<sup>1</sup>,
-          Kazimierz Oksza-Orzechowski<sup>1</sup>, Lucas Arnoldt<sup>3,4</sup>,
-          Daria Romanovskaia<sup>3,6</sup>, Nikita Moshkov<sup>3</sup>,
-          Hassan Akell<sup>2</sup>, Valentina Beliaeva<sup>3,6</sup>,
-          Dinesh Haridoss<sup>2</sup>, Robert Pieniuta<sup>1</sup>,
-          Vladimir Shitov<sup>3,6</sup>, Malte Luecken<sup>3,6</sup>,
-          Fabian Theis<sup>3,4,5</sup>, Ewa Szczurek<sup>1,2</sup>
-        </p>
-        <ol class="affiliations-list">
-          <li>Faculty of Mathematics, Informatics and Mechanics, University of Warsaw, Warsaw, Poland</li>
-          <li>Institute of AI for Health, Helmholtz Munich, Neuherberg, Germany</li>
-          <li>Institute of Computational Biology, Helmholtz Munich, Neuherberg, Germany</li>
-          <li>TUM School of Life Sciences, Technical University of Munich, Germany</li>
-          <li>TUM, School of Computation, Information and Technology, Technical University of Munich, Germany</li>
-          <li>Institute of Lung Health &amp; Immunity, Helmholtz Munich; Member of the German Center for Lung Research (DZL), Munich, Germany</li>
-        </ol>
       </section>
 
       <section id="atlas" class="workspace" aria-label="Method search">
@@ -164,10 +122,20 @@
             <button id="clearFilters" class="link-button" type="button">Clear</button>
           </div>
 
-          <label class="field">
-            <span>Search</span>
-            <input id="searchInput" type="search" placeholder="Method or family" />
-          </label>
+          <div class="filter-intro">
+            <label class="field">
+              <span>Search</span>
+              <input id="searchInput" type="search" placeholder="Method or family" />
+            </label>
+            <div class="filter-help">
+              <h3>More about filtering</h3>
+              <p>
+                Filters follow the conceptual axes introduced in the review,
+                so each result reflects explicit data and modelling assumptions.
+              </p>
+              <button id="openAxesDialog" class="link-button" type="button">See more</button>
+            </div>
+          </div>
 
           <fieldset class="filter-group">
             <legend>Data regime</legend>
@@ -229,7 +197,10 @@
 
         <section class="results" aria-label="Method results">
           <div class="results-toolbar">
-            <h2>Methods</h2>
+            <div>
+              <h2>Methods</h2>
+              <p id="resultsMeta" class="results-meta">Showing 0 of 0</p>
+            </div>
             <div class="toolbar-controls">
               <label>
                 <input id="hideCuration" type="checkbox" />
@@ -240,9 +211,44 @@
           </div>
           <div id="activeFilters" class="active-filters" aria-live="polite"></div>
           <div id="resultsList" class="results-list"></div>
+          <div class="results-actions">
+            <button id="showMoreResults" class="button secondary" type="button">Show 10 more</button>
+            <button id="showAllResults" class="link-button" type="button">Reveal all</button>
+            <button id="collapseResults" class="link-button" type="button" hidden>Hide expanded list</button>
+          </div>
         </section>
       </section>
     </main>
+
+    <dialog id="axesDialog" class="info-dialog">
+      <div class="info-panel">
+        <div class="dialog-head">
+          <div>
+            <p class="section-kicker">Review framework</p>
+            <h2>Conceptual axes for filtering</h2>
+          </div>
+          <button id="closeAxesDialog" class="link-button" type="button">Close</button>
+        </div>
+        <img src="assets/multimodal-axes.png" alt="Conceptual axes for multimodal data regimes and model properties" />
+        <div class="axis-definitions">
+          <article>
+            <h3>Data regime</h3>
+            <p>Correspondence, missingness, and granularity describe how strongly the modalities align and how demanding the observed data setting is.</p>
+          </article>
+          <article>
+            <h3>Modelling formalism</h3>
+            <p>Prior knowledge, latent design, and architecture place methods between informed, structured, inspectable formulations and agnostic, unstructured, black-box ones.</p>
+          </article>
+          <article>
+            <h3>Application level</h3>
+            <p>Application level distinguishes broadly reusable general-purpose models from application-driven formulations targeting a specific biological question.</p>
+          </article>
+        </div>
+        <p class="figure-caption">
+          Figure 1. Conceptual axes for classifying multimodal integration methods in biology. Multimodal integration methods can be positioned along three complementary dimensions. The data regime can be progressively relaxed from its most controlled form, namely paired, fully observed, single-level measurements, toward increasingly demanding settings with stronger missingness, weaker cross-modal correspondence, or multi-level granularity. The modelling formalism can be tightened or loosened independently of the data: a formulation may move toward stronger prior knowledge, more structured latent representations, and more inspectable architectures, or remain agnostic, unstructured, and black-box. Finally, the application level distinguishes broadly reusable general-purpose models from application-driven formulations targeting a specific biological question. Together, these axes situate any integration method within a common framework and make explicit what assumptions a method requires and what it gives up.
+        </p>
+      </div>
+    </dialog>
 
     <dialog id="suggestDialog" class="suggest-dialog">
       <form method="dialog" class="suggest-form">

@@ -26,6 +26,7 @@ const axisLabels = {
 };
 
 let methods = [];
+let resultLimit = 5;
 
 const suggestionSelects = [
   { id: "suggestFamily", source: "method_family", fallback: ["Other / unsure"] },
@@ -150,6 +151,7 @@ function selectOptions(id) {
 function populateSelects() {
   filterConfig.forEach(({ id }) => {
     const select = document.getElementById(id);
+    if (!select) return;
     select.innerHTML = "";
     const anyOption = document.createElement("option");
     anyOption.value = "";
@@ -168,6 +170,7 @@ function populateSelects() {
 function populateSuggestionSelects() {
   suggestionSelects.forEach(({ id, source, fallback }) => {
     const select = document.getElementById(id);
+    if (!select) return;
     select.innerHTML = "";
 
     const unsure = document.createElement("option");
@@ -296,24 +299,6 @@ function formatPublicationDate(value) {
   return date.toLocaleDateString("en", { month: "short", year: "numeric" });
 }
 
-function compactMethodSummary(method) {
-  const parts = [
-    `${labelize(method.method_family)} approach`,
-    hasCurationValue(method.axis_latent_design) ? `${method.axis_latent_design} latent design` : "",
-    hasCurationValue(method.axis_architecture) ? `${method.axis_architecture} architecture` : "",
-    hasCurationValue(method.axis_prior_knowledge) ? `${method.axis_prior_knowledge} prior knowledge` : "",
-  ].filter(Boolean);
-  const data = [
-    hasCurationValue(method.axis_correspondence) ? `${method.axis_correspondence} correspondence` : "",
-    hasCurationValue(method.axis_missingness) ? `${method.axis_missingness} missingness` : "",
-    hasCurationValue(method.axis_granularity) ? `${method.axis_granularity} granularity` : "",
-  ].filter(Boolean);
-  const task = hasCurationValue(method.application_primary_task)
-    ? `Primary task: ${labelize(method.application_primary_task)}.`
-    : "";
-  return `${parts.join("; ")}. ${data.length ? `Data setting: ${data.join(", ")}.` : ""} ${task}`.trim();
-}
-
 function renderMethod(method, score) {
   const statusClass = method.needs_curation === "yes" ? "needs-curation" : "curated";
   const statusText = method.needs_curation === "yes" ? "Needs curation" : "Curated";
@@ -333,7 +318,6 @@ function renderMethod(method, score) {
           <h3>${method.method}</h3>
           <div class="method-meta">${method.method_family} · ${labelize(method.method_scope)}</div>
           ${publicationMeta ? `<div class="publication-meta">${publicationMeta}</div>` : ""}
-          <p class="method-summary">${compactMethodSummary(method)}</p>
           <div class="method-links">
             ${methodLink(publicationLabel, method.publication_url, "Publication to curate")}
             ${methodLink(resourceLabel, method.resource_url, "Resource to curate", "Resource unavailable")}
@@ -414,6 +398,7 @@ function candidateCsvRow() {
 
 function renderTimeline() {
   const container = document.getElementById("timelineList");
+  if (!container) return;
   const dated = methods
     .filter((method) => /^\d{4}-\d{2}$/.test(method.publication_date || ""))
     .sort((a, b) => a.publication_date.localeCompare(b.publication_date));
@@ -502,8 +487,10 @@ function issueUrl() {
 }
 
 function updateSuggestionOutput() {
-  document.getElementById("suggestCsvRow").value = candidateCsvRow();
-  document.getElementById("openIssueLink").href = issueUrl();
+  const csvRow = document.getElementById("suggestCsvRow");
+  const issueLink = document.getElementById("openIssueLink");
+  if (csvRow) csvRow.value = candidateCsvRow();
+  if (issueLink) issueLink.href = issueUrl();
 }
 
 function renderResults() {
@@ -519,75 +506,139 @@ function renderResults() {
     });
 
   document.getElementById("visibleCount").textContent = visible.length;
+  const resultMeta = document.getElementById("resultsMeta");
   const list = document.getElementById("resultsList");
+  const showMore = document.getElementById("showMoreResults");
+  const showAll = document.getElementById("showAllResults");
+  const collapse = document.getElementById("collapseResults");
   if (!visible.length) {
     list.innerHTML = `<div class="empty-state">No methods match current filters.</div>`;
+    if (resultMeta) resultMeta.textContent = "0 shown";
+    [showMore, showAll, collapse].forEach((button) => {
+      if (button) button.hidden = true;
+    });
     return;
   }
-  list.innerHTML = visible.map(({ method, score }) => renderMethod(method, score)).join("");
+  const shown = visible.slice(0, resultLimit);
+  list.innerHTML = shown.map(({ method, score }) => renderMethod(method, score)).join("");
+  if (resultMeta) resultMeta.textContent = `Showing ${shown.length} of ${visible.length}`;
+  if (showMore) showMore.hidden = resultLimit >= visible.length;
+  if (showAll) showAll.hidden = resultLimit >= visible.length;
+  if (collapse) collapse.hidden = resultLimit <= 5;
 }
 
-function attachEvents() {
+function resetAndRenderResults() {
+  resultLimit = 5;
+  renderResults();
+}
+
+function attachAtlasEvents() {
   filterConfig.forEach(({ id }) => {
-    document.getElementById(id).addEventListener("change", renderResults);
+    document.getElementById(id).addEventListener("change", resetAndRenderResults);
   });
-  document.getElementById("searchInput").addEventListener("input", renderResults);
-  document.getElementById("hideCuration").addEventListener("change", renderResults);
+  document.getElementById("searchInput").addEventListener("input", resetAndRenderResults);
+  document.getElementById("hideCuration").addEventListener("change", resetAndRenderResults);
   document.getElementById("clearFilters").addEventListener("click", () => {
     filterConfig.forEach(({ id }) => {
       document.getElementById(id).value = "";
     });
     document.getElementById("searchInput").value = "";
     document.getElementById("hideCuration").checked = false;
-    renderResults();
+    resetAndRenderResults();
   });
   document.getElementById("downloadCsv").addEventListener("click", () => {
     window.location.href = DATA_URL;
   });
+  document.getElementById("showMoreResults").addEventListener("click", () => {
+    resultLimit += 10;
+    renderResults();
+  });
+  document.getElementById("showAllResults").addEventListener("click", () => {
+    resultLimit = Number.MAX_SAFE_INTEGER;
+    renderResults();
+  });
+  document.getElementById("collapseResults").addEventListener("click", () => {
+    resultLimit = 5;
+    renderResults();
+  });
+}
 
+function attachDialogEvents() {
   const dialog = document.getElementById("suggestDialog");
-  document.querySelectorAll(".open-suggest-dialog").forEach((trigger) => {
-    trigger.addEventListener("click", () => {
-      updateSuggestionOutput();
-      dialog.showModal();
+  if (dialog) {
+    document.querySelectorAll(".open-suggest-dialog").forEach((trigger) => {
+      trigger.addEventListener("click", () => {
+        updateSuggestionOutput();
+        dialog.showModal();
+      });
     });
-  });
-  document.getElementById("closeSuggestDialog").addEventListener("click", () => {
-    dialog.close();
-  });
+    document.getElementById("closeSuggestDialog").addEventListener("click", () => {
+      dialog.close();
+    });
+  }
+
+  const axesDialog = document.getElementById("axesDialog");
+  if (axesDialog) {
+    document.getElementById("openAxesDialog").addEventListener("click", () => {
+      axesDialog.showModal();
+    });
+    document.getElementById("closeAxesDialog").addEventListener("click", () => {
+      axesDialog.close();
+    });
+  }
+
   document.querySelectorAll("#suggestDialog input, #suggestDialog select, #suggestDialog textarea").forEach((field) => {
     field.addEventListener("input", updateSuggestionOutput);
     field.addEventListener("change", updateSuggestionOutput);
   });
-  document.getElementById("copyCsvRow").addEventListener("click", async () => {
-    await navigator.clipboard.writeText(document.getElementById("suggestCsvRow").value);
-    document.getElementById("copyCsvRow").textContent = "Copied";
-    setTimeout(() => {
-      document.getElementById("copyCsvRow").textContent = "Copy CSV row";
-    }, 1600);
-  });
+  const copyButton = document.getElementById("copyCsvRow");
+  if (copyButton) {
+    copyButton.addEventListener("click", async () => {
+      await navigator.clipboard.writeText(document.getElementById("suggestCsvRow").value);
+      copyButton.textContent = "Copied";
+      setTimeout(() => {
+        copyButton.textContent = "Copy CSV row";
+      }, 1600);
+    });
+  }
+
+  if (window.location.hash === "#contribute" && dialog) {
+    updateSuggestionOutput();
+    dialog.showModal();
+    history.replaceState(null, "", window.location.pathname);
+  }
+}
+
+function attachEvents() {
+  if (document.getElementById("atlas")) attachAtlasEvents();
+  attachDialogEvents();
 }
 
 async function init() {
   const response = await fetch(DATA_URL);
   const csv = await response.text();
   methods = parseCsv(csv);
-  document.getElementById("methodCount").textContent = methods.length;
-  document.getElementById("doiCount").textContent = methods.filter(
-    (method) => isUrl(method.publication_url),
-  ).length;
-  document.getElementById("resourceCount").textContent = methods.filter(
-    (method) => isUrl(method.resource_url),
-  ).length;
+  const methodCount = document.getElementById("methodCount");
+  const doiCount = document.getElementById("doiCount");
+  const resourceCount = document.getElementById("resourceCount");
+  if (methodCount) methodCount.textContent = methods.length;
+  if (doiCount) {
+    doiCount.textContent = methods.filter((method) => isUrl(method.publication_url)).length;
+  }
+  if (resourceCount) {
+    resourceCount.textContent = methods.filter((method) => isUrl(method.resource_url)).length;
+  }
   populateSelects();
   populateSuggestionSelects();
   attachEvents();
   renderTimeline();
-  renderResults();
+  if (document.getElementById("atlas")) renderResults();
   updateSuggestionOutput();
 }
 
 init().catch((error) => {
-  document.getElementById("resultsList").innerHTML =
-    `<div class="empty-state">Could not load method library: ${error.message}</div>`;
+  const list = document.getElementById("resultsList") || document.getElementById("timelineList");
+  if (list) {
+    list.innerHTML = `<div class="empty-state">Could not load method library: ${error.message}</div>`;
+  }
 });
