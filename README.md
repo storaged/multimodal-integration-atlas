@@ -1,6 +1,6 @@
 # Multimodal Integration Atlas
 
-Curated atlas of multimodal data integration methods for biology. The atlas lets researchers filter methods by the review axes: correspondence, missingness, granularity, prior knowledge, latent design, architecture, application level, supervision, and application type. Method cards also expose DOI/publication links and curated online resources when available.
+Curated atlas of multimodal data integration methods for biology. The atlas lets researchers filter methods by the review axes: correspondence, missingness, granularity, prior knowledge, latent design, architecture, application level, supervision, and application type. Method cards also expose DOI/publication links, curated online resources, mechanism summaries, and a publication timeline when month-level metadata is available.
 
 The project is designed as a companion resource for a review article. The manuscript is not included in this repository at this stage.
 

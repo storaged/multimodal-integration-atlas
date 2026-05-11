@@ -125,6 +125,10 @@ function publicationUrlFromCitation(value) {
   return "";
 }
 
+function isUrl(value) {
+  return /^https?:\/\//i.test(value || "");
+}
+
 function selectOptions(id) {
   if (id === "application_task") {
     const tasks = new Set();
@@ -212,6 +216,8 @@ function methodMatches(method, filters) {
       method.axis_architecture,
       method.axis_application_level,
       method.method_doi,
+      method.publication_date,
+      method.publisher,
       method.resource_url,
     ]
       .join(" ")
@@ -273,18 +279,50 @@ function hasCurationValue(value) {
   return value && value !== "to_be_curated";
 }
 
-function methodLink(label, url, missingLabel) {
-  if (!hasCurationValue(url)) {
+function methodLink(label, url, missingLabel, unavailableLabel = missingLabel) {
+  if (url === "unavailable") {
+    return `<span class="method-link missing">${unavailableLabel}</span>`;
+  }
+  if (!hasCurationValue(url) || !isUrl(url)) {
     return `<span class="method-link missing">${missingLabel}</span>`;
   }
   return `<a class="method-link" href="${url}" target="_blank" rel="noreferrer">${label}</a>`;
+}
+
+function formatPublicationDate(value) {
+  if (!/^\d{4}-\d{2}$/.test(value || "")) return "";
+  const [year, month] = value.split("-");
+  const date = new Date(Number(year), Number(month) - 1, 1);
+  return date.toLocaleDateString("en", { month: "short", year: "numeric" });
+}
+
+function compactMethodSummary(method) {
+  const parts = [
+    `${labelize(method.method_family)} approach`,
+    hasCurationValue(method.axis_latent_design) ? `${method.axis_latent_design} latent design` : "",
+    hasCurationValue(method.axis_architecture) ? `${method.axis_architecture} architecture` : "",
+    hasCurationValue(method.axis_prior_knowledge) ? `${method.axis_prior_knowledge} prior knowledge` : "",
+  ].filter(Boolean);
+  const data = [
+    hasCurationValue(method.axis_correspondence) ? `${method.axis_correspondence} correspondence` : "",
+    hasCurationValue(method.axis_missingness) ? `${method.axis_missingness} missingness` : "",
+    hasCurationValue(method.axis_granularity) ? `${method.axis_granularity} granularity` : "",
+  ].filter(Boolean);
+  const task = hasCurationValue(method.application_primary_task)
+    ? `Primary task: ${labelize(method.application_primary_task)}.`
+    : "";
+  return `${parts.join("; ")}. ${data.length ? `Data setting: ${data.join(", ")}.` : ""} ${task}`.trim();
 }
 
 function renderMethod(method, score) {
   const statusClass = method.needs_curation === "yes" ? "needs-curation" : "curated";
   const statusText = method.needs_curation === "yes" ? "Needs curation" : "Curated";
   const scoreText = score ? `${score} matched` : "No filters";
-  const doiLabel = hasCurationValue(method.method_doi) ? `DOI: ${method.method_doi}` : "DOI to curate";
+  const publicationDate = formatPublicationDate(method.publication_date);
+  const publicationMeta = [publicationDate, method.publisher].filter(hasCurationValue).join(" · ");
+  const publicationLabel = hasCurationValue(method.method_doi)
+    ? `DOI: ${method.method_doi}`
+    : "Publication";
   const resourceLabel = hasCurationValue(method.resource_type)
     ? `Resource: ${labelize(method.resource_type)}`
     : "Resource to curate";
@@ -294,9 +332,11 @@ function renderMethod(method, score) {
         <div>
           <h3>${method.method}</h3>
           <div class="method-meta">${method.method_family} · ${labelize(method.method_scope)}</div>
+          ${publicationMeta ? `<div class="publication-meta">${publicationMeta}</div>` : ""}
+          <p class="method-summary">${compactMethodSummary(method)}</p>
           <div class="method-links">
-            ${methodLink(doiLabel, method.publication_url, "DOI to curate")}
-            ${methodLink(resourceLabel, method.resource_url, "Resource to curate")}
+            ${methodLink(publicationLabel, method.publication_url, "Publication to curate")}
+            ${methodLink(resourceLabel, method.resource_url, "Resource to curate", "Resource unavailable")}
           </div>
         </div>
         <div class="score">${scoreText}</div>
@@ -343,6 +383,8 @@ function candidateCsvRow() {
     "",
     doi,
     publicationUrlFromCitation(citation),
+    "",
+    "",
     resourceUrl,
     resourceType,
     suggestionValue("suggestPairedness"),
@@ -368,6 +410,56 @@ function candidateCsvRow() {
     `suggested citation: ${citation}`,
   ];
   return row.map(csvEscape).join(",");
+}
+
+function renderTimeline() {
+  const container = document.getElementById("timelineList");
+  const dated = methods
+    .filter((method) => /^\d{4}-\d{2}$/.test(method.publication_date || ""))
+    .sort((a, b) => a.publication_date.localeCompare(b.publication_date));
+
+  if (!dated.length) {
+    container.innerHTML = `<div class="empty-state">No month-level publication dates have been curated yet.</div>`;
+    return;
+  }
+
+  const byYear = new Map();
+  dated.forEach((method) => {
+    const year = method.publication_date.slice(0, 4);
+    if (!byYear.has(year)) byYear.set(year, []);
+    byYear.get(year).push(method);
+  });
+
+  container.innerHTML = [...byYear.entries()]
+    .map(([year, items]) => {
+      const families = new Set(items.map((method) => method.method_family));
+      const visible = items.slice(0, 5);
+      const remaining = items.length - visible.length;
+      const methodWord = items.length === 1 ? "method" : "methods";
+      const familyWord = families.size === 1 ? "family" : "families";
+      return `
+        <article class="timeline-year">
+          <div class="timeline-year-head">
+            <strong>${year}</strong>
+            <span>${items.length} ${methodWord} · ${families.size} ${familyWord}</span>
+          </div>
+          <div class="timeline-methods">
+            ${visible
+              .map(
+                (method) => `
+                  <span>
+                    <b>${method.method}</b>
+                    <small>${formatPublicationDate(method.publication_date)}</small>
+                  </span>
+                `,
+              )
+              .join("")}
+            ${remaining > 0 ? `<span class="timeline-more">+${remaining} more</span>` : ""}
+          </div>
+        </article>
+      `;
+    })
+    .join("");
 }
 
 function issueUrl() {
@@ -480,14 +572,15 @@ async function init() {
   methods = parseCsv(csv);
   document.getElementById("methodCount").textContent = methods.length;
   document.getElementById("doiCount").textContent = methods.filter(
-    (method) => hasCurationValue(method.publication_url),
+    (method) => isUrl(method.publication_url),
   ).length;
   document.getElementById("resourceCount").textContent = methods.filter(
-    (method) => hasCurationValue(method.resource_url),
+    (method) => isUrl(method.resource_url),
   ).length;
   populateSelects();
   populateSuggestionSelects();
   attachEvents();
+  renderTimeline();
   renderResults();
   updateSuggestionOutput();
 }

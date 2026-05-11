@@ -163,7 +163,7 @@ main {
 .intro-panel {
   padding: 18px 20px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 270px;
+  grid-template-columns: minmax(0, 1fr) 300px;
   gap: 24px;
   align-items: start;
 }
@@ -187,6 +187,33 @@ main {
 .workflow-list li {
   margin-bottom: 5px;
   padding-left: 3px;
+}
+
+.value-points {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.value-points div {
+  border-left: 3px solid var(--violet);
+  padding-left: 12px;
+}
+
+.value-points strong,
+.value-points span {
+  display: block;
+}
+
+.value-points strong {
+  margin-bottom: 4px;
+  color: var(--ink);
+}
+
+.value-points span {
+  color: var(--muted);
+  font-size: 0.88rem;
 }
 
 .metric-panel {
@@ -260,6 +287,87 @@ main {
   grid-template-columns: 1fr;
   gap: 18px;
   align-items: start;
+}
+
+.timeline-section {
+  margin-bottom: 18px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 16px;
+  background: var(--panel);
+  box-shadow: var(--shadow);
+}
+
+.section-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 440px);
+  gap: 18px;
+  align-items: end;
+  margin-bottom: 14px;
+}
+
+.section-head h2 {
+  margin-bottom: 0;
+}
+
+.section-head p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.timeline-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 12px;
+}
+
+.timeline-year {
+  border: 1px solid #e1e6eb;
+  border-radius: 8px;
+  padding: 12px;
+  background: #fbfcfd;
+}
+
+.timeline-year-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  border-bottom: 1px solid #e5e9ee;
+  padding-bottom: 8px;
+  margin-bottom: 10px;
+}
+
+.timeline-year-head strong {
+  color: var(--plum);
+  font-size: 1.12rem;
+}
+
+.timeline-year-head span,
+.timeline-methods small {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.timeline-methods {
+  display: grid;
+  gap: 6px;
+}
+
+.timeline-methods span {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.timeline-methods b {
+  font-size: 0.88rem;
+}
+
+.timeline-more {
+  color: var(--plum);
+  font-weight: 700;
 }
 
 .filters,
@@ -403,6 +511,19 @@ a:focus-visible {
 .method-meta {
   color: var(--muted);
   font-size: 0.9rem;
+}
+
+.publication-meta {
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.method-summary {
+  max-width: 980px;
+  margin: 8px 0 0;
+  color: #344150;
+  font-size: 0.92rem;
 }
 
 .score {
@@ -569,6 +690,11 @@ a:focus-visible {
   }
 
   .intro-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .value-points,
+  .section-head {
     grid-template-columns: 1fr;
   }
 

@@ -12,6 +12,8 @@ The app reads `data/integration_methods_library.csv`. Each row describes one int
 | `method_scope` | Broad source group: `analytical` or `deep_learning`. |
 | `method_doi` | DOI for the primary method publication, or `to_be_curated`. |
 | `publication_url` | DOI resolver or publication URL for the primary method paper, or `to_be_curated`. |
+| `publication_date` | Month-level publication date in `YYYY-MM` format when DOI metadata supports it. |
+| `publisher` | Publisher or proceedings source returned by DOI metadata, or manually curated for non-DOI publications. |
 | `resource_url` | Public software, package, web service, or documentation URL, or `to_be_curated`. |
 | `resource_type` | Resource category, such as `software`, `package`, `web service`, `documentation`, or `to_be_curated`. |
 | `axis_correspondence` | Data correspondence axis: `paired`, `partial`, `unpaired`, or `to_be_curated`. |

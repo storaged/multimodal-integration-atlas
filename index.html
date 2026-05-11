@@ -17,11 +17,14 @@
           <p class="eyebrow">Research-created method library</p>
           <h1>Multimodal Integration Atlas</h1>
           <p class="lede">
-            Search a curated library of multimodal biology methods by data regime,
-            modelling formalism, application level, supervision, and intended task.
+            A human-curated, review-backed atlas for matching multimodal
+            integration methods to data regimes, modelling assumptions,
+            supervision settings, and intended tasks.
           </p>
         </div>
         <nav class="header-actions" aria-label="Repository links">
+          <a class="button secondary" href="#atlas">Browse atlas</a>
+          <a class="button secondary" href="#timeline">Timeline</a>
           <a class="button secondary" href="docs/schema.md">Schema</a>
           <button class="button primary" id="openSuggestDialog" type="button">
             Suggest method
@@ -34,19 +37,35 @@
       <section class="overview" aria-label="Overview">
         <div class="intro-panel">
           <div>
-            <p class="section-kicker">Decision support</p>
-            <h2>Find methods by the axes used in the review</h2>
+            <p class="section-kicker">TL;DR</p>
+            <h2>A review taxonomy made inspectable and reusable</h2>
             <p>
-              Start with what is known about the data, then refine by model
-              assumptions and task. Leaving a field unspecified keeps the search
-              broad.
+              This atlas translates the review's conceptual axes into a
+              transparent method-selection resource. Entries are curated from
+              the literature and linked to primary publications and software
+              resources where available, rather than generated as opaque
+              recommendations.
             </p>
+            <div class="value-points" aria-label="Atlas value">
+              <div>
+                <strong>Human-curated</strong>
+                <span>Classifications are maintained as a versioned table, not inferred at query time.</span>
+              </div>
+              <div>
+                <strong>Assumption-aware</strong>
+                <span>Filters follow the review axes: data regime, mathematical design, supervision, and task.</span>
+              </div>
+              <div>
+                <strong>Community-maintained</strong>
+                <span>Researchers can suggest updates through GitHub while curator review remains explicit.</span>
+              </div>
+            </div>
           </div>
           <ol class="workflow-list">
-            <li>Specify data regime</li>
-            <li>Refine method properties</li>
-            <li>Review candidate methods</li>
-            <li>Suggest additions through curation</li>
+            <li>Filter by data and task</li>
+            <li>Inspect methodological mechanism</li>
+            <li>Verify publication and resource links</li>
+            <li>Suggest curated extensions</li>
           </ol>
         </div>
 
@@ -78,7 +97,21 @@
         </details>
       </section>
 
-      <section class="workspace" aria-label="Method search">
+      <section id="timeline" class="timeline-section" aria-label="Publication timeline">
+        <div class="section-head">
+          <div>
+            <p class="section-kicker">Method landscape</p>
+            <h2>Publication timeline</h2>
+          </div>
+          <p>
+            Generated from curated DOI metadata in the library. Dates are shown
+            when month-level publication metadata is available.
+          </p>
+        </div>
+        <div id="timelineList" class="timeline-list"></div>
+      </section>
+
+      <section id="atlas" class="workspace" aria-label="Method search">
         <section class="filters" aria-label="Filters">
           <div class="filters-head">
             <div>
